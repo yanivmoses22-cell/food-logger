@@ -523,8 +523,8 @@ function bodyRects(map){ let r=''; map.forEach((row,y)=>{ for(let x=0;x<row.leng
 function tailSeg(d,n){ let r=''; for(let yy=-3;yy<=-1;yy++) for(let xx=0;xx<=1;xx++){ const stripe=(yy===-2&&d%2===0); r+=`<rect x="${xx}" y="${yy}" width="1" height="1" fill="${stripe?PAL.D:PAL.O}"/>`; }
   return `<g class="seg s${d}">${r}<g transform="translate(0,-3)">${d<n?tailSeg(d+1,n):''}</g></g>`; }
 function catSVG(w){
-  return `<svg class="px" viewBox="0 0 48 42" width="${w}" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">`+
-    `<g class="cat" transform="translate(13,16)"><g class="tail" transform="translate(14,13) rotate(20)">${tailSeg(1,5)}</g>`+
+  return `<svg class="px" viewBox="-4 -4 24 24" width="${w}" style="overflow:visible" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">`+
+    `<g class="cat"><g class="tail" transform="translate(14,13) rotate(20)">${tailSeg(1,5)}</g>`+
     `<g class="body">${bodyRects(CAT)}</g></g></svg>`;
 }
 
