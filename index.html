@@ -24,8 +24,12 @@
     padding:16px 16px 14px; position:sticky; top:0; z-index:20;
     box-shadow:0 2px 10px rgba(0,0,0,.15);
   }
+  .hgrid{display:flex; align-items:flex-start; justify-content:space-between; gap:10px; max-width:560px; margin:0 auto;}
   header h1{margin:0; font-size:19px; font-weight:700; letter-spacing:.2px;}
   header p{margin:3px 0 0; font-size:12px; opacity:.85;}
+  .langtog{display:flex; gap:4px; flex:0 0 auto; background:rgba(255,255,255,.15); border-radius:20px; padding:3px;}
+  .langtog button{background:none; border:none; color:#fff; font-weight:700; font-size:12px; padding:6px 11px; border-radius:16px; cursor:pointer; font-family:inherit; opacity:.7;}
+  .langtog button.active{background:#fff; color:var(--navy); opacity:1;}
   .wrap{max-width:560px; margin:0 auto; padding:14px;}
   .card{
     background:var(--card); border:1px solid var(--line); border-radius:14px;
@@ -178,159 +182,182 @@
   .clear-day button{background:none; border:none; color:var(--danger); font-size:12.5px; font-weight:600; cursor:pointer; text-decoration:underline;}
   .goal-out{background:var(--lgreen); border:1px solid #b6d8a8; border-radius:10px; padding:10px 12px; margin-top:12px; font-size:13px; font-weight:700; color:#1e5e16; display:none;}
   .goal-out.show{display:block;}
+
+  /* ---- RTL ---- */
+  [dir=rtl] .search-wrap input{padding-left:12px; padding-right:38px;}
+  [dir=rtl] .search-wrap .ico{left:auto; right:12px;}
+  [dir=rtl] label{letter-spacing:0;}
+  [dir=rtl] .section-title,[dir=rtl] .sel-title,[dir=rtl] .stat .l{letter-spacing:0;}
+  [dir=rtl] .sel-total,[dir=rtl] .hist-row .hk{text-align:left;}
+  [dir=rtl] .pill .c,[dir=rtl] .pill .kc{margin-left:0; margin-right:4px;}
+  [dir=rtl] .thumb span{right:auto; left:-6px;}
 </style>
 </head>
 <body>
 <header>
-  <h1>🍽️ Food Logger</h1>
-  <p>Pick ingredients → it totals calories & macros for you</p>
+  <div class="hgrid">
+    <div>
+      <h1 data-i18n="title">🍽️ Food Logger</h1>
+      <p data-i18n="sub">Pick ingredients → it totals calories & macros for you</p>
+    </div>
+    <div class="langtog" id="langtog">
+      <button data-lang="en">EN</button>
+      <button data-lang="he">עב</button>
+    </div>
+  </div>
 </header>
 
 <div class="wrap">
 
   <!-- WHO + WHEN -->
   <div class="card">
-    <label>Who's logging?</label>
+    <label data-i18n="who">Who's logging?</label>
     <div class="people" id="people"></div>
     <div style="margin-top:12px">
-      <label>Date</label>
+      <label data-i18n="date">Date</label>
       <input type="date" id="date">
     </div>
-    <div class="keto-banner" id="ketoBanner">⚡ Keto — keep carbs under ~25 g today. Watch breads, sugar, fruit.</div>
+    <div class="keto-banner" id="ketoBanner" data-i18n="ketoBanner">⚡ Keto — keep carbs under ~25 g today. Watch breads, sugar, fruit.</div>
   </div>
 
   <!-- GOALS / BODY STATS -->
   <div class="card">
     <div class="collapse-head" id="goalsHead">
-      <div class="section-title" style="margin:0">⚙️ Goals &amp; body stats</div>
+      <div class="section-title" style="margin:0" data-i18n="goalsTitle">⚙️ Goals &amp; body stats</div>
       <span class="chev">▼</span>
     </div>
     <div class="collapse-body" id="goalsBody">
       <div class="row">
-        <div><label>Weight (kg)</label><input type="number" id="sWeight" inputmode="decimal" step="any"></div>
-        <div><label>Height (cm)</label><input type="number" id="sHeight" inputmode="decimal" step="any"></div>
+        <div><label data-i18n="weight">Weight (kg)</label><input type="number" id="sWeight" inputmode="decimal" step="any"></div>
+        <div><label data-i18n="height">Height (cm)</label><input type="number" id="sHeight" inputmode="decimal" step="any"></div>
       </div>
       <div class="row" style="margin-top:10px">
-        <div><label>Age</label><input type="number" id="sAge" inputmode="numeric"></div>
-        <div><label>Gender</label><select id="sGender"><option>Male</option><option>Female</option></select></div>
-      </div>
-      <div class="row" style="margin-top:10px">
-        <div><label>Activity</label><select id="sAct">
-          <option value="1.2">Sedentary</option>
-          <option value="1.375">Light (1–2×/wk)</option>
-          <option value="1.55">Moderate (3×/wk)</option>
-          <option value="1.725">Active (5×/wk)</option>
+        <div><label data-i18n="age">Age</label><input type="number" id="sAge" inputmode="numeric"></div>
+        <div><label data-i18n="gender">Gender</label><select id="sGender">
+          <option value="Male" data-i18n="male">Male</option>
+          <option value="Female" data-i18n="female">Female</option>
         </select></div>
-        <div><label>Diet</label><select id="sDiet"><option>Standard</option><option>Keto</option></select></div>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <div><label data-i18n="activity">Activity</label><select id="sAct">
+          <option value="1.2" data-i18n="act_sed">Sedentary</option>
+          <option value="1.375" data-i18n="act_light">Light (1–2×/wk)</option>
+          <option value="1.55" data-i18n="act_mod">Moderate (3×/wk)</option>
+          <option value="1.725" data-i18n="act_active">Active (5×/wk)</option>
+        </select></div>
+        <div><label data-i18n="diet">Diet</label><select id="sDiet">
+          <option value="Standard" data-i18n="diet_std">Standard</option>
+          <option value="Keto" data-i18n="diet_keto">Keto</option>
+        </select></div>
       </div>
       <div style="margin-top:10px">
-        <label>Goal type</label>
+        <label data-i18n="goalType">Goal type</label>
         <select id="sGoalType">
-          <option value="-500">Cut fat (−500 kcal)</option>
-          <option value="0">Maintain</option>
-          <option value="300">Bulk (+300 kcal)</option>
+          <option value="-500" data-i18n="goal_cut">Cut fat (−500 kcal)</option>
+          <option value="0" data-i18n="goal_maintain">Maintain</option>
+          <option value="300" data-i18n="goal_bulk">Bulk (+300 kcal)</option>
         </select>
       </div>
       <div class="goal-out" id="goalOut"></div>
       <div class="row" style="margin-top:12px">
-        <div><button class="btn btn-add btn-sm" id="saveGoals">Save &amp; calculate</button></div>
+        <div><button class="btn btn-add btn-sm" id="saveGoals" data-i18n="saveCalc">Save &amp; calculate</button></div>
       </div>
-      <div class="hint">Uses the Mifflin–St Jeor formula — same as the Excel. Protein target = 1.8 g/kg. Keto caps carbs at 25 g.</div>
+      <div class="hint" data-i18n="goalsHint">Uses the Mifflin–St Jeor formula — same as the Excel. Protein target = 1.8 g/kg. Keto caps carbs at 25 g.</div>
     </div>
   </div>
 
   <!-- ADD A MEAL -->
   <div class="card">
-    <div class="section-title">Add a meal</div>
+    <div class="section-title" data-i18n="addMeal">Add a meal</div>
 
-    <label>Meal type</label>
+    <label data-i18n="mealType">Meal type</label>
     <div class="meal-types" id="mealTypes">
-      <div class="mt" data-v="Breakfast"><span class="emo">🌅</span>Breakfast</div>
-      <div class="mt" data-v="Lunch"><span class="emo">☀️</span>Lunch</div>
-      <div class="mt" data-v="Dinner"><span class="emo">🌙</span>Dinner</div>
-      <div class="mt" data-v="Snack"><span class="emo">🍪</span>Snack</div>
+      <div class="mt" data-v="Breakfast"><span class="emo">🌅</span><span class="lbl" data-i18n="mt_Breakfast">Breakfast</span></div>
+      <div class="mt" data-v="Lunch"><span class="emo">☀️</span><span class="lbl" data-i18n="mt_Lunch">Lunch</span></div>
+      <div class="mt" data-v="Dinner"><span class="emo">🌙</span><span class="lbl" data-i18n="mt_Dinner">Dinner</span></div>
+      <div class="mt" data-v="Snack"><span class="emo">🍪</span><span class="lbl" data-i18n="mt_Snack">Snack</span></div>
     </div>
 
     <div style="margin-top:12px">
-      <label>Meal name <span style="text-transform:none;font-weight:400">(optional — auto-filled from items)</span></label>
-      <input type="text" id="mealName" placeholder="e.g. Chicken salad, Protein shake">
+      <label><span data-i18n="mealName">Meal name</span> <span style="text-transform:none;font-weight:400" data-i18n="mealNameOpt">(optional — auto-filled from items)</span></label>
+      <input type="text" id="mealName" data-i18n-ph="mealNamePh" placeholder="e.g. Chicken salad, Protein shake">
     </div>
 
     <div style="margin-top:14px">
-      <label>Add ingredients — search or tap</label>
+      <label data-i18n="addIng">Add ingredients — search or tap</label>
       <div class="search-wrap">
         <span class="ico">🔍</span>
-        <input type="text" id="search" placeholder="Search ingredient…" autocomplete="off">
+        <input type="text" id="search" data-i18n-ph="searchPh" placeholder="Search ingredient…" autocomplete="off">
       </div>
       <div class="chips" id="chips"></div>
       <div class="pool" id="pool"></div>
 
       <!-- custom add box -->
       <div class="custombox" id="customBox">
-        <label style="margin-bottom:4px">Add your own ingredient</label>
-        <input type="text" id="cName" placeholder="Ingredient / product name">
+        <label style="margin-bottom:4px" data-i18n="customTitle">Add your own ingredient</label>
+        <input type="text" id="cName" data-i18n-ph="customNamePh" placeholder="Ingredient / product name">
         <div class="row">
           <div><select id="cCat"></select></div>
           <div><select id="cUnit"></select></div>
         </div>
-        <div class="macro-note">Nutrition per 100 g (from the label — leave blank if unknown):</div>
+        <div class="macro-note" data-i18n="per100note">Nutrition per 100 g (from the label — leave blank if unknown):</div>
         <div class="row">
-          <div><input type="number" id="cK" inputmode="decimal" step="any" placeholder="kcal"></div>
-          <div><input type="number" id="cP" inputmode="decimal" step="any" placeholder="protein"></div>
+          <div><input type="number" id="cK" inputmode="decimal" step="any" data-i18n-ph="ph_kcal" placeholder="kcal"></div>
+          <div><input type="number" id="cP" inputmode="decimal" step="any" data-i18n-ph="ph_protein" placeholder="protein"></div>
         </div>
         <div class="row" style="margin-top:8px">
-          <div><input type="number" id="cC" inputmode="decimal" step="any" placeholder="carbs"></div>
-          <div><input type="number" id="cF" inputmode="decimal" step="any" placeholder="fat"></div>
+          <div><input type="number" id="cC" inputmode="decimal" step="any" data-i18n-ph="ph_carbs" placeholder="carbs"></div>
+          <div><input type="number" id="cF" inputmode="decimal" step="any" data-i18n-ph="ph_fat" placeholder="fat"></div>
         </div>
-        <label class="chk"><input type="checkbox" id="cSave" checked> Save to my list for next time</label>
+        <label class="chk"><input type="checkbox" id="cSave" checked> <span data-i18n="saveList">Save to my list for next time</span></label>
         <div class="row" style="margin-top:10px">
-          <div><button class="btn btn-add btn-sm" id="cAdd">Add ingredient</button></div>
-          <div><button class="btn btn-sm btn-ghost" id="cCancel">Cancel</button></div>
+          <div><button class="btn btn-add btn-sm" id="cAdd" data-i18n="addIngBtn">Add ingredient</button></div>
+          <div><button class="btn btn-sm btn-ghost" id="cCancel" data-i18n="cancel">Cancel</button></div>
         </div>
       </div>
     </div>
 
     <!-- selected items for this meal -->
     <div class="selected">
-      <div class="sel-title">This meal</div>
+      <div class="sel-title" data-i18n="thisMeal">This meal</div>
       <div id="selected"></div>
       <div class="sel-total" id="selTotal"></div>
     </div>
 
     <div style="margin-top:14px">
-      <label>Product label photos <span style="text-transform:none;font-weight:400">(new packaged items)</span></label>
-      <div class="photos-btn" id="photoBtn">📷 Add product label photo</div>
+      <label><span data-i18n="photosLabel">Product label photos</span> <span style="text-transform:none;font-weight:400" data-i18n="photosOpt">(new packaged items)</span></label>
+      <div class="photos-btn" id="photoBtn" data-i18n="addPhoto">📷 Add product label photo</div>
       <input type="file" id="photoInput" accept="image/*" capture="environment" multiple>
       <div class="thumbs" id="thumbs"></div>
-      <div class="hint">For a new packaged product, add its per-100 g numbers in the custom box above so it totals correctly and is saved for next time.</div>
+      <div class="hint" data-i18n="photoHint">For a new packaged product, add its per-100 g numbers in the custom box above so it totals correctly and is saved for next time.</div>
     </div>
 
     <div style="margin-top:14px">
-      <button class="btn btn-add" id="addBtn">＋ Add meal to log</button>
+      <button class="btn btn-add" id="addBtn" data-i18n="addToLog">＋ Add meal to log</button>
     </div>
   </div>
 
   <!-- TODAY'S LOG -->
   <div class="card">
-    <div class="section-title">Today <span id="dayLabel" style="color:var(--muted);font-weight:600;text-transform:none;letter-spacing:0"></span></div>
+    <div class="section-title"><span data-i18n="todayTitle">Today</span> <span id="dayLabel" style="color:var(--muted);font-weight:600;text-transform:none;letter-spacing:0"></span></div>
     <div id="dash"></div>
     <div class="entries" id="entries"></div>
     <div class="clear-day" id="clearDayWrap" style="display:none">
-      <button id="clearDay">Clear this day's log</button>
+      <button id="clearDay" data-i18n="clearDay">Clear this day's log</button>
     </div>
   </div>
 
   <!-- HISTORY -->
   <div class="card">
     <div class="collapse-head" id="histHead">
-      <div class="section-title" style="margin:0">📅 History</div>
+      <div class="section-title" style="margin:0" data-i18n="histTitle">📅 History</div>
       <span class="chev">▼</span>
     </div>
     <div class="collapse-body" id="histBody">
       <div id="histList"></div>
       <div class="row" style="margin-top:12px">
-        <div><button class="btn btn-ghost btn-sm" id="expMine">⬇️ Export my history (CSV)</button></div>
-        <div><button class="btn btn-ghost btn-sm" id="expAll">⬇️ Export everyone (CSV)</button></div>
+        <div><button class="btn btn-ghost btn-sm" id="expMine" data-i18n="expMine">⬇️ Export my history (CSV)</button></div>
+        <div><button class="btn btn-ghost btn-sm" id="expAll" data-i18n="expAll">⬇️ Export everyone (CSV)</button></div>
       </div>
     </div>
   </div>
@@ -338,8 +365,8 @@
 </div>
 
 <div class="actionbar">
-  <button class="btn btn-share" id="shareBtn">📲 Share log</button>
-  <button class="btn btn-copy" id="copyBtn">📋 Copy log</button>
+  <button class="btn btn-share" id="shareBtn" data-i18n="shareLog">📲 Share log</button>
+  <button class="btn btn-copy" id="copyBtn" data-i18n="copyLog">📋 Copy log</button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -352,11 +379,8 @@ const PEOPLE = [
 
 const CATS = ['Protein','Carbs','Veg','Fats','Dairy','Fruit','Drinks','Other'];
 const UNITS = ['g','ml','unit','slice','scoop','tbsp','tsp','cup','can','handful'];
-
-// grams per unit fallback when an item has no specific weight for that unit
 const GEN = {g:1, ml:1, unit:100, slice:30, scoop:30, tbsp:15, tsp:5, cup:240, can:120, handful:30};
 
-// default body/goal presets per person (weights/ages blank — fill in the app)
 const PRESET = {
   Yaniv:  {w:76, h:177, age:'', gender:'Male',   act:'1.375', diet:'Keto'},
   Nastya: {w:'', h:'',  age:'', gender:'Female', act:'1.2',   diet:'Keto'},
@@ -364,98 +388,207 @@ const PRESET = {
   Eitan:  {w:'', h:'',  age:'', gender:'Male',   act:'1.55',  diet:'Standard'},
 };
 
-// Built-in ingredients. Macros per 100 g: k=kcal p=protein cb=carbs ft=fat.
-// g = grams in ONE default unit (only when unit isn't g/ml).
+// ---- i18n ----
+const I18N = {
+  en:{
+    title:'🍽️ Food Logger', sub:'Pick ingredients → it totals calories & macros for you',
+    who:"Who's logging?", date:'Date',
+    ketoBanner:'⚡ Keto — keep carbs under ~25 g today. Watch breads, sugar, fruit.',
+    goalsTitle:'⚙️ Goals & body stats', weight:'Weight (kg)', height:'Height (cm)', age:'Age',
+    gender:'Gender', male:'Male', female:'Female', activity:'Activity',
+    act_sed:'Sedentary', act_light:'Light (1–2×/wk)', act_mod:'Moderate (3×/wk)', act_active:'Active (5×/wk)',
+    diet:'Diet', diet_std:'Standard', diet_keto:'Keto', goalType:'Goal type',
+    goal_cut:'Cut fat (−500 kcal)', goal_maintain:'Maintain', goal_bulk:'Bulk (+300 kcal)',
+    saveCalc:'Save & calculate',
+    goalsHint:'Uses the Mifflin–St Jeor formula — same as the Excel. Protein target = 1.8 g/kg. Keto caps carbs at 25 g.',
+    addMeal:'Add a meal', mealType:'Meal type',
+    mt_Breakfast:'Breakfast', mt_Lunch:'Lunch', mt_Dinner:'Dinner', mt_Snack:'Snack',
+    mealName:'Meal name', mealNameOpt:'(optional — auto-filled from items)',
+    mealNamePh:'e.g. Chicken salad, Protein shake',
+    addIng:'Add ingredients — search or tap', searchPh:'Search ingredient…',
+    cat_All:'All', cat_Protein:'Protein', cat_Carbs:'Carbs', cat_Veg:'Veg', cat_Fats:'Fats',
+    cat_Dairy:'Dairy', cat_Fruit:'Fruit', cat_Drinks:'Drinks', cat_Other:'Other',
+    addCustom:'＋ Add custom', noMacros:'no macros', kcalPer100:'kcal/100',
+    customTitle:'Add your own ingredient', customNamePh:'Ingredient / product name',
+    per100note:'Nutrition per 100 g (from the label — leave blank if unknown):',
+    ph_kcal:'kcal', ph_protein:'protein', ph_carbs:'carbs', ph_fat:'fat',
+    saveList:'Save to my list for next time', addIngBtn:'Add ingredient', cancel:'Cancel',
+    thisMeal:'This meal', noItems:'No items yet — tap ingredients above.',
+    mealWord:'Meal:', someMissing:'(some items missing macros)',
+    photosLabel:'Product label photos', photosOpt:'(new packaged items)',
+    addPhoto:'📷 Add product label photo',
+    photoHint:'For a new packaged product, add its per-100 g numbers in the custom box above so it totals correctly and is saved for next time.',
+    addToLog:'＋ Add meal to log', todayTitle:'Today',
+    st_kcal:'kcal', st_protein:'protein', st_carbs:'carbs', st_fat:'fat',
+    left:'left', over:'over',
+    setStats:'Set body stats above to see “remaining vs goal”.',
+    unknownWarn:'⚠︎ Some items have no macros yet — totals are low. Add their per-100 g values.',
+    noMealsDay:'No meals logged yet for this day.', labelPhotos:'label photo(s) to attach',
+    clearDay:"Clear this day's log", clearConfirm:"Clear this day's logged meals?", dayCleared:'Day cleared',
+    histTitle:'📅 History', meals:'meal(s)', noHistory:'No history yet for',
+    expMine:'⬇️ Export my history (CSV)', expAll:'⬇️ Export everyone (CSV)', csvDone:'✓ CSV downloaded',
+    shareLog:'📲 Share log', copyLog:'📋 Copy log', copied:'✓ Copied',
+    nothingCopy:'Nothing to copy yet', nothingShare:'Nothing to share yet',
+    shareUnsup:'Copied (sharing not supported here)',
+    alreadyAdded:'Already added', typeName:'Type a name', addedSaved:'✓ Added & saved', added:'✓ Added',
+    needIng:'Add at least one ingredient', mealAdded:'✓ Meal added', goalsSaved:'✓ Goals saved',
+    noHistShort:'No history yet',
+    perDay:'kcal/day', gProtein:'g protein', carbsLe:'carbs ≤', fatApprox:'fat ~', carbsApprox:'carbs ~',
+    abK:'kcal', abP:'g P', abC:'g C', abF:'g F',
+  },
+  he:{
+    title:'🍽️ יומן אוכל', sub:'בחרו מרכיבים ← המערכת מחשבת קלוריות ומאקרו',
+    who:'מי מתעד?', date:'תאריך',
+    ketoBanner:'⚡ קיטו — שמרו על פחמימות מתחת ל-25 גרם היום. היזהרו מלחם, סוכר ופירות.',
+    goalsTitle:'⚙️ יעדים ונתוני גוף', weight:'משקל (ק״ג)', height:'גובה (ס״מ)', age:'גיל',
+    gender:'מין', male:'זכר', female:'נקבה', activity:'רמת פעילות',
+    act_sed:'יושבני', act_light:'קל (1–2 בשבוע)', act_mod:'בינוני (3 בשבוע)', act_active:'פעיל (5 בשבוע)',
+    diet:'תזונה', diet_std:'רגילה', diet_keto:'קיטו', goalType:'מטרה',
+    goal_cut:'חיטוב (−500 קלוריות)', goal_maintain:'שמירה', goal_bulk:'עלייה במסה (+300 קלוריות)',
+    saveCalc:'שמירה וחישוב',
+    goalsHint:'מבוסס על נוסחת מיפלין-סנט ג׳ור — כמו באקסל. יעד חלבון = 1.8 גרם/ק״ג. בקיטו הפחמימות מוגבלות ל-25 גרם.',
+    addMeal:'הוספת ארוחה', mealType:'סוג ארוחה',
+    mt_Breakfast:'בוקר', mt_Lunch:'צהריים', mt_Dinner:'ערב', mt_Snack:'נשנוש',
+    mealName:'שם הארוחה', mealNameOpt:'(לא חובה — יתמלא לפי המרכיבים)',
+    mealNamePh:'למשל: סלט עוף, שייק חלבון',
+    addIng:'הוספת מרכיבים — חיפוש או הקשה', searchPh:'חיפוש מרכיב…',
+    cat_All:'הכול', cat_Protein:'חלבון', cat_Carbs:'פחמימות', cat_Veg:'ירקות', cat_Fats:'שומנים',
+    cat_Dairy:'מוצרי חלב', cat_Fruit:'פירות', cat_Drinks:'משקאות', cat_Other:'אחר',
+    addCustom:'＋ הוספה מותאמת', noMacros:'אין ערכים', kcalPer100:'קל׳/100ג',
+    customTitle:'הוספת מרכיב משלך', customNamePh:'שם מרכיב / מוצר',
+    per100note:'ערכים ל-100 גרם (מהתווית — השאירו ריק אם לא ידוע):',
+    ph_kcal:'קלוריות', ph_protein:'חלבון', ph_carbs:'פחמימות', ph_fat:'שומן',
+    saveList:'שמירה לרשימה שלי לפעם הבאה', addIngBtn:'הוספת מרכיב', cancel:'ביטול',
+    thisMeal:'הארוחה הזו', noItems:'עדיין אין פריטים — הקישו על מרכיבים למעלה.',
+    mealWord:'ארוחה:', someMissing:'(חלק מהפריטים ללא ערכים)',
+    photosLabel:'תמונות תווית מוצר', photosOpt:'(מוצרים ארוזים חדשים)',
+    addPhoto:'📷 צילום תווית מוצר',
+    photoHint:'למוצר ארוז חדש, הזינו את הערכים ל-100 גרם בתיבה למעלה כדי שיחושב נכון ויישמר לפעם הבאה.',
+    addToLog:'＋ הוספת ארוחה ליומן', todayTitle:'היום',
+    st_kcal:'קלוריות', st_protein:'חלבון', st_carbs:'פחמימות', st_fat:'שומן',
+    left:'נותרו', over:'מעבר',
+    setStats:'הזינו נתוני גוף למעלה כדי לראות כמה נותר מהיעד.',
+    unknownWarn:'⚠︎ לחלק מהפריטים אין ערכים — הסכום נמוך. הוסיפו ערכים ל-100 גרם.',
+    noMealsDay:'עדיין לא תועדו ארוחות ליום הזה.', labelPhotos:'תמונות תווית לצרף',
+    clearDay:'מחיקת היומן של היום', clearConfirm:'למחוק את הארוחות שתועדו היום?', dayCleared:'היום נמחק',
+    histTitle:'📅 היסטוריה', meals:'ארוחות', noHistory:'עדיין אין היסטוריה עבור',
+    expMine:'⬇️ ייצוא ההיסטוריה שלי (CSV)', expAll:'⬇️ ייצוא של כולם (CSV)', csvDone:'✓ הקובץ הורד',
+    shareLog:'📲 שיתוף יומן', copyLog:'📋 העתקת יומן', copied:'✓ הועתק',
+    nothingCopy:'אין מה להעתיק עדיין', nothingShare:'אין מה לשתף עדיין',
+    shareUnsup:'הועתק (שיתוף לא נתמך כאן)',
+    alreadyAdded:'כבר נוסף', typeName:'הקלידו שם', addedSaved:'✓ נוסף ונשמר', added:'✓ נוסף',
+    needIng:'הוסיפו לפחות מרכיב אחד', mealAdded:'✓ הארוחה נוספה', goalsSaved:'✓ היעדים נשמרו',
+    noHistShort:'אין היסטוריה עדיין',
+    perDay:'קל׳/יום', gProtein:'ג׳ חלבון', carbsLe:'פחמימות ≤', fatApprox:'שומן ~', carbsApprox:'פחמימות ~',
+    abK:'קל׳', abP:'ג׳ חלבון', abC:'ג׳ פחמ׳', abF:'ג׳ שומן',
+  }
+};
+const UNIT_HE = {g:'גרם', ml:'מ״ל', unit:'יח׳', slice:'פרוסה', scoop:'סקופ', tbsp:'כף', tsp:'כפית', cup:'כוס', can:'פחית', handful:'חופן'};
+
+let LANG = localStorage.getItem('fl_lang') || 'en';
+function t(k){ return (I18N[LANG] && I18N[LANG][k]!=null) ? I18N[LANG][k] : (I18N.en[k]!=null?I18N.en[k]:k); }
+function catLabel(c){ return c==='All'?t('cat_All'):t('cat_'+c); }
+function unitLabel(u){ return LANG==='he' ? (UNIT_HE[u]||u) : u; }
+function iName(it){
+  if(LANG==='he'){
+    if(it.he) return it.he;
+    const d=dbMap()[(it.n||'').toLowerCase()];
+    if(d&&d.he) return d.he;
+  }
+  return it.n;
+}
+
+// Built-in ingredients. Macros per 100 g: k/p/cb/ft. g=grams in one default unit (when unit isn't g/ml). he=Hebrew name.
 const BASE = [
   // Protein
-  {n:'Eggs',c:'Protein',u:'unit',q:2,k:155,p:13,cb:1.1,ft:11,g:50},
-  {n:'Chicken breast',c:'Protein',u:'g',q:150,k:165,p:31,cb:0,ft:3.6},
-  {n:'Chicken thigh',c:'Protein',u:'g',q:150,k:209,p:26,cb:0,ft:11},
-  {n:'Salmon',c:'Protein',u:'g',q:150,k:208,p:20,cb:0,ft:13},
-  {n:'Tuna (canned)',c:'Protein',u:'can',q:1,k:116,p:26,cb:0,ft:1,g:120},
-  {n:'Beef steak',c:'Protein',u:'g',q:200,k:271,p:25,cb:0,ft:19},
-  {n:'Ground beef',c:'Protein',u:'g',q:150,k:250,p:26,cb:0,ft:15},
-  {n:'Turkey breast',c:'Protein',u:'g',q:150,k:135,p:30,cb:0,ft:1},
-  {n:'Shrimp',c:'Protein',u:'g',q:120,k:99,p:24,cb:0.2,ft:0.3},
-  {n:'Whey protein shake',c:'Protein',u:'scoop',q:1,k:400,p:80,cb:10,ft:5,g:30},
-  {n:'Greek yogurt',c:'Protein',u:'g',q:170,k:73,p:10,cb:4,ft:2},
-  {n:'Cottage cheese',c:'Protein',u:'g',q:150,k:98,p:11,cb:3.4,ft:4.3},
-  {n:'Tofu',c:'Protein',u:'g',q:150,k:76,p:8,cb:1.9,ft:4.8},
-  {n:'Lentils (cooked)',c:'Protein',u:'g',q:150,k:116,p:9,cb:20,ft:0.4},
-  {n:'Chickpeas (cooked)',c:'Protein',u:'g',q:150,k:164,p:8.9,cb:27,ft:2.6},
-  {n:'Protein bar',c:'Protein',u:'unit',q:1,k:333,p:33,cb:35,ft:12,g:60},
-  {n:'Sardines',c:'Protein',u:'can',q:1,k:208,p:25,cb:0,ft:11,g:90},
+  {n:'Eggs',he:'ביצים',c:'Protein',u:'unit',q:2,k:155,p:13,cb:1.1,ft:11,g:50},
+  {n:'Chicken breast',he:'חזה עוף',c:'Protein',u:'g',q:150,k:165,p:31,cb:0,ft:3.6},
+  {n:'Chicken thigh',he:'ירך עוף',c:'Protein',u:'g',q:150,k:209,p:26,cb:0,ft:11},
+  {n:'Salmon',he:'סלמון',c:'Protein',u:'g',q:150,k:208,p:20,cb:0,ft:13},
+  {n:'Tuna (canned)',he:'טונה (שימורים)',c:'Protein',u:'can',q:1,k:116,p:26,cb:0,ft:1,g:120},
+  {n:'Beef steak',he:'סטייק בקר',c:'Protein',u:'g',q:200,k:271,p:25,cb:0,ft:19},
+  {n:'Ground beef',he:'בשר בקר טחון',c:'Protein',u:'g',q:150,k:250,p:26,cb:0,ft:15},
+  {n:'Turkey breast',he:'חזה הודו',c:'Protein',u:'g',q:150,k:135,p:30,cb:0,ft:1},
+  {n:'Shrimp',he:'שרימפס',c:'Protein',u:'g',q:120,k:99,p:24,cb:0.2,ft:0.3},
+  {n:'Whey protein shake',he:'שייק חלבון',c:'Protein',u:'scoop',q:1,k:400,p:80,cb:10,ft:5,g:30},
+  {n:'Greek yogurt',he:'יוגורט יווני',c:'Protein',u:'g',q:170,k:73,p:10,cb:4,ft:2},
+  {n:'Cottage cheese',he:'קוטג׳',c:'Protein',u:'g',q:150,k:98,p:11,cb:3.4,ft:4.3},
+  {n:'Tofu',he:'טופו',c:'Protein',u:'g',q:150,k:76,p:8,cb:1.9,ft:4.8},
+  {n:'Lentils (cooked)',he:'עדשים (מבושל)',c:'Protein',u:'g',q:150,k:116,p:9,cb:20,ft:0.4},
+  {n:'Chickpeas (cooked)',he:'גרגרי חומוס (מבושל)',c:'Protein',u:'g',q:150,k:164,p:8.9,cb:27,ft:2.6},
+  {n:'Protein bar',he:'חטיף חלבון',c:'Protein',u:'unit',q:1,k:333,p:33,cb:35,ft:12,g:60},
+  {n:'Sardines',he:'סרדינים',c:'Protein',u:'can',q:1,k:208,p:25,cb:0,ft:11,g:90},
   // Carbs
-  {n:'White rice (cooked)',c:'Carbs',u:'g',q:150,k:130,p:2.7,cb:28,ft:0.3},
-  {n:'Brown rice (cooked)',c:'Carbs',u:'g',q:150,k:123,p:2.7,cb:26,ft:1},
-  {n:'Pasta (cooked)',c:'Carbs',u:'g',q:150,k:158,p:5.8,cb:31,ft:0.9},
-  {n:'Bread',c:'Carbs',u:'slice',q:2,k:265,p:9,cb:49,ft:3.2,g:30},
-  {n:'Pita',c:'Carbs',u:'unit',q:1,k:275,p:9,cb:55,ft:1.2,g:60},
-  {n:'Potato',c:'Carbs',u:'g',q:200,k:87,p:2,cb:20,ft:0.1},
-  {n:'Sweet potato',c:'Carbs',u:'g',q:200,k:90,p:2,cb:21,ft:0.1},
-  {n:'Oats',c:'Carbs',u:'g',q:60,k:389,p:17,cb:66,ft:7},
-  {n:'Quinoa (cooked)',c:'Carbs',u:'g',q:150,k:120,p:4.4,cb:21,ft:1.9},
-  {n:'Couscous (cooked)',c:'Carbs',u:'g',q:150,k:112,p:3.8,cb:23,ft:0.2},
-  {n:'Tortilla / wrap',c:'Carbs',u:'unit',q:1,k:310,p:8,cb:52,ft:8,g:50},
-  {n:'Cereal',c:'Carbs',u:'g',q:50,k:380,p:7,cb:84,ft:3},
-  {n:'Bagel',c:'Carbs',u:'unit',q:1,k:270,p:11,cb:53,ft:1.7,g:90},
-  {n:'Corn',c:'Carbs',u:'g',q:100,k:96,p:3.4,cb:21,ft:1.5},
+  {n:'White rice (cooked)',he:'אורז לבן (מבושל)',c:'Carbs',u:'g',q:150,k:130,p:2.7,cb:28,ft:0.3},
+  {n:'Brown rice (cooked)',he:'אורז מלא (מבושל)',c:'Carbs',u:'g',q:150,k:123,p:2.7,cb:26,ft:1},
+  {n:'Pasta (cooked)',he:'פסטה (מבושל)',c:'Carbs',u:'g',q:150,k:158,p:5.8,cb:31,ft:0.9},
+  {n:'Bread',he:'לחם',c:'Carbs',u:'slice',q:2,k:265,p:9,cb:49,ft:3.2,g:30},
+  {n:'Pita',he:'פיתה',c:'Carbs',u:'unit',q:1,k:275,p:9,cb:55,ft:1.2,g:60},
+  {n:'Potato',he:'תפוח אדמה',c:'Carbs',u:'g',q:200,k:87,p:2,cb:20,ft:0.1},
+  {n:'Sweet potato',he:'בטטה',c:'Carbs',u:'g',q:200,k:90,p:2,cb:21,ft:0.1},
+  {n:'Oats',he:'שיבולת שועל',c:'Carbs',u:'g',q:60,k:389,p:17,cb:66,ft:7},
+  {n:'Quinoa (cooked)',he:'קינואה (מבושל)',c:'Carbs',u:'g',q:150,k:120,p:4.4,cb:21,ft:1.9},
+  {n:'Couscous (cooked)',he:'קוסקוס (מבושל)',c:'Carbs',u:'g',q:150,k:112,p:3.8,cb:23,ft:0.2},
+  {n:'Tortilla / wrap',he:'טורטייה / רּאפ',c:'Carbs',u:'unit',q:1,k:310,p:8,cb:52,ft:8,g:50},
+  {n:'Cereal',he:'דגני בוקר',c:'Carbs',u:'g',q:50,k:380,p:7,cb:84,ft:3},
+  {n:'Bagel',he:'בייגל',c:'Carbs',u:'unit',q:1,k:270,p:11,cb:53,ft:1.7,g:90},
+  {n:'Corn',he:'תירס',c:'Carbs',u:'g',q:100,k:96,p:3.4,cb:21,ft:1.5},
   // Veg
-  {n:'Mixed salad / greens',c:'Veg',u:'g',q:100,k:20,p:1.5,cb:3,ft:0.2},
-  {n:'Tomato',c:'Veg',u:'g',q:100,k:18,p:0.9,cb:3.9,ft:0.2},
-  {n:'Cucumber',c:'Veg',u:'g',q:100,k:15,p:0.7,cb:3.6,ft:0.1},
-  {n:'Broccoli',c:'Veg',u:'g',q:100,k:34,p:2.8,cb:7,ft:0.4},
-  {n:'Spinach',c:'Veg',u:'g',q:80,k:23,p:2.9,cb:3.6,ft:0.4},
-  {n:'Bell pepper',c:'Veg',u:'g',q:100,k:31,p:1,cb:6,ft:0.3},
-  {n:'Onion',c:'Veg',u:'g',q:50,k:40,p:1.1,cb:9,ft:0.1},
-  {n:'Mushrooms',c:'Veg',u:'g',q:100,k:22,p:3.1,cb:3.3,ft:0.3},
-  {n:'Zucchini',c:'Veg',u:'g',q:100,k:17,p:1.2,cb:3.1,ft:0.3},
-  {n:'Cauliflower',c:'Veg',u:'g',q:100,k:25,p:1.9,cb:5,ft:0.3},
-  {n:'Carrot',c:'Veg',u:'g',q:80,k:41,p:0.9,cb:10,ft:0.2},
-  {n:'Lettuce',c:'Veg',u:'g',q:50,k:15,p:1.4,cb:2.9,ft:0.2},
-  {n:'Eggplant',c:'Veg',u:'g',q:100,k:25,p:1,cb:6,ft:0.2},
+  {n:'Mixed salad / greens',he:'סלט / עלים ירוקים',c:'Veg',u:'g',q:100,k:20,p:1.5,cb:3,ft:0.2},
+  {n:'Tomato',he:'עגבנייה',c:'Veg',u:'g',q:100,k:18,p:0.9,cb:3.9,ft:0.2},
+  {n:'Cucumber',he:'מלפפון',c:'Veg',u:'g',q:100,k:15,p:0.7,cb:3.6,ft:0.1},
+  {n:'Broccoli',he:'ברוקולי',c:'Veg',u:'g',q:100,k:34,p:2.8,cb:7,ft:0.4},
+  {n:'Spinach',he:'תרד',c:'Veg',u:'g',q:80,k:23,p:2.9,cb:3.6,ft:0.4},
+  {n:'Bell pepper',he:'פלפל',c:'Veg',u:'g',q:100,k:31,p:1,cb:6,ft:0.3},
+  {n:'Onion',he:'בצל',c:'Veg',u:'g',q:50,k:40,p:1.1,cb:9,ft:0.1},
+  {n:'Mushrooms',he:'פטריות',c:'Veg',u:'g',q:100,k:22,p:3.1,cb:3.3,ft:0.3},
+  {n:'Zucchini',he:'קישוא',c:'Veg',u:'g',q:100,k:17,p:1.2,cb:3.1,ft:0.3},
+  {n:'Cauliflower',he:'כרובית',c:'Veg',u:'g',q:100,k:25,p:1.9,cb:5,ft:0.3},
+  {n:'Carrot',he:'גזר',c:'Veg',u:'g',q:80,k:41,p:0.9,cb:10,ft:0.2},
+  {n:'Lettuce',he:'חסה',c:'Veg',u:'g',q:50,k:15,p:1.4,cb:2.9,ft:0.2},
+  {n:'Eggplant',he:'חציל',c:'Veg',u:'g',q:100,k:25,p:1,cb:6,ft:0.2},
   // Fats
-  {n:'Olive oil',c:'Fats',u:'tbsp',q:1,k:884,p:0,cb:0,ft:100,g:13.5},
-  {n:'Butter',c:'Fats',u:'g',q:10,k:717,p:0.9,cb:0.1,ft:81},
-  {n:'Coconut oil',c:'Fats',u:'tbsp',q:1,k:862,p:0,cb:0,ft:100,g:13.5},
-  {n:'Avocado',c:'Fats',u:'unit',q:1,k:160,p:2,cb:9,ft:15,g:150},
-  {n:'Almonds',c:'Fats',u:'g',q:30,k:579,p:21,cb:22,ft:50},
-  {n:'Walnuts',c:'Fats',u:'g',q:30,k:654,p:15,cb:14,ft:65},
-  {n:'Peanut butter',c:'Fats',u:'tbsp',q:1,k:588,p:25,cb:20,ft:50,g:16},
-  {n:'Tahini',c:'Fats',u:'tbsp',q:1,k:595,p:17,cb:21,ft:54,g:15},
-  {n:'Mayonnaise',c:'Fats',u:'tbsp',q:1,k:680,p:1,cb:0.6,ft:75,g:14},
-  {n:'Chia seeds',c:'Fats',u:'tbsp',q:1,k:486,p:17,cb:42,ft:31,g:12},
+  {n:'Olive oil',he:'שמן זית',c:'Fats',u:'tbsp',q:1,k:884,p:0,cb:0,ft:100,g:13.5},
+  {n:'Butter',he:'חמאה',c:'Fats',u:'g',q:10,k:717,p:0.9,cb:0.1,ft:81},
+  {n:'Coconut oil',he:'שמן קוקוס',c:'Fats',u:'tbsp',q:1,k:862,p:0,cb:0,ft:100,g:13.5},
+  {n:'Avocado',he:'אבוקדו',c:'Fats',u:'unit',q:1,k:160,p:2,cb:9,ft:15,g:150},
+  {n:'Almonds',he:'שקדים',c:'Fats',u:'g',q:30,k:579,p:21,cb:22,ft:50},
+  {n:'Walnuts',he:'אגוזי מלך',c:'Fats',u:'g',q:30,k:654,p:15,cb:14,ft:65},
+  {n:'Peanut butter',he:'חמאת בוטנים',c:'Fats',u:'tbsp',q:1,k:588,p:25,cb:20,ft:50,g:16},
+  {n:'Tahini',he:'טחינה',c:'Fats',u:'tbsp',q:1,k:595,p:17,cb:21,ft:54,g:15},
+  {n:'Mayonnaise',he:'מיונז',c:'Fats',u:'tbsp',q:1,k:680,p:1,cb:0.6,ft:75,g:14},
+  {n:'Chia seeds',he:'זרעי צ׳יה',c:'Fats',u:'tbsp',q:1,k:486,p:17,cb:42,ft:31,g:12},
   // Dairy
-  {n:'Milk',c:'Dairy',u:'ml',q:200,k:60,p:3.2,cb:4.8,ft:3.3},
-  {n:'Cheese (yellow)',c:'Dairy',u:'g',q:30,k:350,p:25,cb:1.3,ft:27},
-  {n:'Feta',c:'Dairy',u:'g',q:50,k:264,p:14,cb:4,ft:21},
-  {n:'Halloumi',c:'Dairy',u:'g',q:60,k:321,p:22,cb:2.2,ft:25},
-  {n:'Mozzarella',c:'Dairy',u:'g',q:60,k:280,p:22,cb:2.2,ft:17},
-  {n:'Cream cheese',c:'Dairy',u:'g',q:30,k:342,p:6,cb:4,ft:34},
-  {n:'Cream',c:'Dairy',u:'ml',q:50,k:340,p:2,cb:3,ft:36},
+  {n:'Milk',he:'חלב',c:'Dairy',u:'ml',q:200,k:60,p:3.2,cb:4.8,ft:3.3},
+  {n:'Cheese (yellow)',he:'גבינה צהובה',c:'Dairy',u:'g',q:30,k:350,p:25,cb:1.3,ft:27},
+  {n:'Feta',he:'גבינה בולגרית',c:'Dairy',u:'g',q:50,k:264,p:14,cb:4,ft:21},
+  {n:'Halloumi',he:'חלומי',c:'Dairy',u:'g',q:60,k:321,p:22,cb:2.2,ft:25},
+  {n:'Mozzarella',he:'מוצרלה',c:'Dairy',u:'g',q:60,k:280,p:22,cb:2.2,ft:17},
+  {n:'Cream cheese',he:'גבינת שמנת',c:'Dairy',u:'g',q:30,k:342,p:6,cb:4,ft:34},
+  {n:'Cream',he:'שמנת',c:'Dairy',u:'ml',q:50,k:340,p:2,cb:3,ft:36},
   // Fruit
-  {n:'Apple',c:'Fruit',u:'unit',q:1,k:52,p:0.3,cb:14,ft:0.2,g:150},
-  {n:'Banana',c:'Fruit',u:'unit',q:1,k:89,p:1.1,cb:23,ft:0.3,g:120},
-  {n:'Berries',c:'Fruit',u:'g',q:100,k:50,p:0.7,cb:12,ft:0.3},
-  {n:'Orange',c:'Fruit',u:'unit',q:1,k:47,p:0.9,cb:12,ft:0.1,g:130},
-  {n:'Grapes',c:'Fruit',u:'g',q:100,k:69,p:0.7,cb:18,ft:0.2},
-  {n:'Strawberries',c:'Fruit',u:'g',q:100,k:32,p:0.7,cb:7.7,ft:0.3},
-  {n:'Dates',c:'Fruit',u:'unit',q:2,k:282,p:2.5,cb:75,ft:0.4,g:8},
+  {n:'Apple',he:'תפוח',c:'Fruit',u:'unit',q:1,k:52,p:0.3,cb:14,ft:0.2,g:150},
+  {n:'Banana',he:'בננה',c:'Fruit',u:'unit',q:1,k:89,p:1.1,cb:23,ft:0.3,g:120},
+  {n:'Berries',he:'פירות יער',c:'Fruit',u:'g',q:100,k:50,p:0.7,cb:12,ft:0.3},
+  {n:'Orange',he:'תפוז',c:'Fruit',u:'unit',q:1,k:47,p:0.9,cb:12,ft:0.1,g:130},
+  {n:'Grapes',he:'ענבים',c:'Fruit',u:'g',q:100,k:69,p:0.7,cb:18,ft:0.2},
+  {n:'Strawberries',he:'תותים',c:'Fruit',u:'g',q:100,k:32,p:0.7,cb:7.7,ft:0.3},
+  {n:'Dates',he:'תמרים',c:'Fruit',u:'unit',q:2,k:282,p:2.5,cb:75,ft:0.4,g:8},
   // Drinks
-  {n:'Coffee (black)',c:'Drinks',u:'cup',q:1,k:1,p:0.1,cb:0,ft:0,g:240},
-  {n:'Tea',c:'Drinks',u:'cup',q:1,k:1,p:0,cb:0.2,ft:0,g:240},
-  {n:'Orange juice',c:'Drinks',u:'ml',q:250,k:45,p:0.7,cb:10,ft:0.2},
-  {n:'Soda',c:'Drinks',u:'ml',q:330,k:42,p:0,cb:11,ft:0},
-  {n:'Diet soda',c:'Drinks',u:'ml',q:330,k:0,p:0,cb:0,ft:0},
-  {n:'Beer',c:'Drinks',u:'ml',q:330,k:43,p:0.5,cb:3.6,ft:0},
-  {n:'Wine',c:'Drinks',u:'ml',q:150,k:83,p:0.1,cb:2.6,ft:0},
+  {n:'Coffee (black)',he:'קפה שחור',c:'Drinks',u:'cup',q:1,k:1,p:0.1,cb:0,ft:0,g:240},
+  {n:'Tea',he:'תה',c:'Drinks',u:'cup',q:1,k:1,p:0,cb:0.2,ft:0,g:240},
+  {n:'Orange juice',he:'מיץ תפוזים',c:'Drinks',u:'ml',q:250,k:45,p:0.7,cb:10,ft:0.2},
+  {n:'Soda',he:'משקה מוגז',c:'Drinks',u:'ml',q:330,k:42,p:0,cb:11,ft:0},
+  {n:'Diet soda',he:'דיאט',c:'Drinks',u:'ml',q:330,k:0,p:0,cb:0,ft:0},
+  {n:'Beer',he:'בירה',c:'Drinks',u:'ml',q:330,k:43,p:0.5,cb:3.6,ft:0},
+  {n:'Wine',he:'יין',c:'Drinks',u:'ml',q:150,k:83,p:0.1,cb:2.6,ft:0},
   // Other
-  {n:'Ketchup',c:'Other',u:'tbsp',q:1,k:112,p:1.7,cb:26,ft:0.1,g:17},
-  {n:'Mustard',c:'Other',u:'tbsp',q:1,k:66,p:4,cb:5,ft:3,g:15},
-  {n:'Soy sauce',c:'Other',u:'tbsp',q:1,k:53,p:8,cb:4.9,ft:0,g:16},
-  {n:'Honey',c:'Other',u:'tbsp',q:1,k:304,p:0.3,cb:82,ft:0,g:21},
-  {n:'Sugar',c:'Other',u:'tsp',q:1,k:387,p:0,cb:100,ft:0,g:4},
-  {n:'Hummus',c:'Other',u:'g',q:50,k:166,p:8,cb:14,ft:10},
+  {n:'Ketchup',he:'קטשופ',c:'Other',u:'tbsp',q:1,k:112,p:1.7,cb:26,ft:0.1,g:17},
+  {n:'Mustard',he:'חרדל',c:'Other',u:'tbsp',q:1,k:66,p:4,cb:5,ft:3,g:15},
+  {n:'Soy sauce',he:'רוטב סויה',c:'Other',u:'tbsp',q:1,k:53,p:8,cb:4.9,ft:0,g:16},
+  {n:'Honey',he:'דבש',c:'Other',u:'tbsp',q:1,k:304,p:0.3,cb:82,ft:0,g:21},
+  {n:'Sugar',he:'סוכר',c:'Other',u:'tsp',q:1,k:387,p:0,cb:100,ft:0,g:4},
+  {n:'Hummus',he:'חומוס (ממרח)',c:'Other',u:'g',q:50,k:166,p:8,cb:14,ft:10},
 ];
 
 const $ = id => document.getElementById(id);
@@ -464,7 +597,7 @@ const state = {
   date: todayISO(),
   mealType: 'Breakfast',
   cat: 'All',
-  items: [],   // {n,c,u,q,k,p,cb,ft,g} selected for the meal being built
+  items: [],
   photos: [],
 };
 
@@ -490,7 +623,6 @@ function gramsOf(it){
   return num(it.q)*gpu;
 }
 function hasMacros(it){ return it && (it.k!=null) && (num(it.k)||num(it.p)||num(it.cb)||num(it.ft)); }
-// resolve a saved/selected item to one carrying macros (snapshot first, else DB lookup)
 function resolve(it){
   if(it.k!=null) return it;
   const d=dbMap()[(it.n||'').toLowerCase()];
@@ -499,7 +631,7 @@ function resolve(it){
 }
 function macrosOf(raw){
   const it=resolve(raw); const f=gramsOf(it)/100;
-  return { k:num(it.k)*f, p:num(it.p)*f, cb:num(it.cb)*f, ft:num(it.ft)*f, known:hasMacros(it) };
+  return { k:num(it.k)*f, p:num(it.p)*f, cb:num(it.cb)*f, ft:num(it.ft)*f, known:!!hasMacros(it) };
 }
 function sumItems(items){
   return (items||[]).reduce((a,it)=>{ const m=macrosOf(it);
@@ -511,6 +643,7 @@ function sumDay(arr){
     a.k+=s.k; a.p+=s.p; a.cb+=s.cb; a.ft+=s.ft; if(s.unknown) a.unknown=true; return a; },
     {k:0,p:0,cb:0,ft:0,unknown:false});
 }
+function fmtMacros(s){ return `${r0(s.k)} ${t('abK')} · ${r1(s.p)} ${t('abP')} · ${r1(s.cb)} ${t('abC')} · ${r1(s.ft)} ${t('abF')}`; }
 
 // ---- goals ----
 function loadStats(){ try{return JSON.parse(localStorage.getItem('fl_stats_'+state.person))||null;}catch(e){return null;} }
@@ -556,7 +689,7 @@ function renderChips(){
   ['All',...CATS].forEach(cat=>{
     const el=document.createElement('div');
     el.className='chip'+(cat===state.cat?' active':'');
-    el.textContent=cat;
+    el.textContent=catLabel(cat);
     el.onclick=()=>{ state.cat=cat; renderChips(); renderPool(); };
     c.appendChild(el);
   });
@@ -568,14 +701,14 @@ function renderPool(){
   const pool=$('pool'); pool.innerHTML='';
   let list=allIngredients();
   if(state.cat!=='All') list=list.filter(i=>i.c===state.cat);
-  if(term) list=list.filter(i=>i.n.toLowerCase().includes(term));
-  list.sort((a,b)=>a.n.localeCompare(b.n));
+  if(term) list=list.filter(i=>i.n.toLowerCase().includes(term) || (i.he&&i.he.includes(term)));
+  list.sort((a,b)=>iName(a).localeCompare(iName(b)));
 
   if(!list.length){
     const e=document.createElement('div'); e.className='pool-empty';
     e.innerHTML = term
-      ? `No match for “${esc(term)}”.<br><span class="add-custom" id="poolCustom">＋ Add “${esc($('search').value.trim())}” as custom</span>`
-      : `No ingredients here. <span class="add-custom" id="poolCustom">＋ Add custom</span>`;
+      ? `“${esc($('search').value.trim())}” —<br><span class="add-custom" id="poolCustom">${t('addCustom')}</span>`
+      : `<span class="add-custom" id="poolCustom">${t('addCustom')}</span>`;
     pool.appendChild(e);
     $('poolCustom').onclick=()=>openCustom($('search').value.trim());
     return;
@@ -585,37 +718,38 @@ function renderPool(){
     const known=hasMacros(it);
     const p=document.createElement('div');
     p.className='pill'+(added?' added':'')+(known?'':' nodata');
-    const kc = known ? `<span class="kc">${it.k} kcal/100</span>` : `<span class="kc">no macros</span>`;
-    p.innerHTML=`${esc(it.n)}<span class="c">${it.c}</span>${kc}`;
+    const kc = known ? `<span class="kc">${it.k} ${t('kcalPer100')}</span>` : `<span class="kc">${t('noMacros')}</span>`;
+    p.innerHTML=`${esc(iName(it))}<span class="c">${catLabel(it.c)}</span>${kc}`;
     p.onclick=()=>{ addItem(it); };
     pool.appendChild(p);
   });
   const add=document.createElement('div');
-  add.className='add-custom'; add.textContent='＋ Add custom';
+  add.className='add-custom'; add.textContent=t('addCustom');
   add.onclick=()=>openCustom($('search').value.trim());
   pool.appendChild(add);
 }
 
 // ---- Selected items ----
 function addItem(it){
-  if(state.items.some(s=>s.n===it.n)){ toast('Already added'); return; }
-  state.items.push({n:it.n, c:it.c, u:it.u, q:it.q, k:it.k, p:it.p, cb:it.cb, ft:it.ft, g:it.g});
+  if(state.items.some(s=>s.n===it.n)){ toast(t('alreadyAdded')); return; }
+  state.items.push({n:it.n, he:it.he, c:it.c, u:it.u, q:it.q, k:it.k, p:it.p, cb:it.cb, ft:it.ft, g:it.g});
   renderSelected(); renderPool();
 }
+function macroBadge(it){ const m=macrosOf(it); return m.known ? `${r0(m.k)} ${t('abK')} · ${r1(m.p)} ${t('abP')}` : `⚠︎ ${t('noMacros')}`; }
 function renderSelected(){
   const c=$('selected');
-  if(!state.items.length){ c.innerHTML='<div class="sel-empty">No items yet — tap ingredients above.</div>'; $('selTotal').textContent=''; return; }
+  if(!state.items.length){ c.innerHTML=`<div class="sel-empty">${t('noItems')}</div>`; $('selTotal').textContent=''; return; }
   c.innerHTML='';
   state.items.forEach((it,idx)=>{
     const row=document.createElement('div'); row.className='sel-row';
-    const unitOpts=UNITS.map(u=>`<option ${u===it.u?'selected':''}>${u}</option>`).join('');
+    const unitOpts=UNITS.map(u=>`<option value="${u}" ${u===it.u?'selected':''}>${unitLabel(u)}</option>`).join('');
     const m=macrosOf(it);
-    const macro = m.known ? `${r0(m.k)} kcal · ${r1(m.p)}P` : `⚠︎ no macros`;
-    row.innerHTML=`<div class="nm">${esc(it.n)}<small class="${m.known?'':'no'}">${macro}</small></div>
+    row.innerHTML=`<div class="nm">${esc(iName(it))}<small class="${m.known?'':'no'}">${macroBadge(it)}</small></div>
       <input class="qty" type="number" inputmode="decimal" min="0" step="any" value="${it.q}">
       <select class="un">${unitOpts}</select>
-      <button class="rm" title="Remove">&times;</button>`;
-    row.querySelector('.qty').oninput=e=>{ it.q=e.target.value; renderSelTotal(); row.querySelector('.nm small').textContent = (()=>{const mm=macrosOf(it); return mm.known?`${r0(mm.k)} kcal · ${r1(mm.p)}P`:'⚠︎ no macros';})(); };
+      <button class="rm" title="x">&times;</button>`;
+    row.querySelector('.qty').oninput=e=>{ it.q=e.target.value; renderSelTotal();
+      const sm=row.querySelector('.nm small'); const mm=macrosOf(it); sm.className=mm.known?'':'no'; sm.textContent=macroBadge(it); };
     row.querySelector('.un').onchange=e=>{ it.u=e.target.value; renderSelected(); };
     row.querySelector('.rm').onclick=()=>{ state.items.splice(idx,1); renderSelected(); renderPool(); };
     c.appendChild(row);
@@ -625,15 +759,15 @@ function renderSelected(){
 function renderSelTotal(){
   if(!state.items.length){ $('selTotal').textContent=''; return; }
   const s=sumItems(state.items);
-  $('selTotal').innerHTML=`Meal: <span style="color:var(--teal)">${r0(s.k)} kcal</span> · ${r1(s.p)}g P · ${r1(s.cb)}g C · ${r1(s.ft)}g F${s.unknown?' <span style="color:#b07400">(some items missing macros)</span>':''}`;
+  $('selTotal').innerHTML=`${t('mealWord')} <span style="color:var(--teal)">${fmtMacros(s)}</span>${s.unknown?` <span style="color:#b07400">${t('someMissing')}</span>`:''}`;
 }
 
 // ---- Custom ingredient box ----
-function fillSelect(sel,opts,val){ sel.innerHTML=opts.map(o=>`<option ${o===val?'selected':''}>${o}</option>`).join(''); }
+function fillSelect(sel,opts,labels,val){ sel.innerHTML=opts.map((o,i)=>`<option value="${o}" ${o===val?'selected':''}>${labels[i]}</option>`).join(''); }
 function openCustom(prefill){
   $('cName').value=prefill||'';
-  fillSelect($('cCat'),CATS,state.cat!=='All'?state.cat:'Protein');
-  fillSelect($('cUnit'),UNITS,'g');
+  fillSelect($('cCat'),CATS,CATS.map(catLabel),state.cat!=='All'?state.cat:'Protein');
+  fillSelect($('cUnit'),UNITS,UNITS.map(unitLabel),'g');
   ['cK','cP','cC','cF'].forEach(id=>$(id).value='');
   $('cSave').checked=true;
   $('customBox').classList.add('show');
@@ -642,7 +776,7 @@ function openCustom(prefill){
 $('cCancel') && ($('cCancel').onclick=()=>$('customBox').classList.remove('show'));
 $('cAdd') && ($('cAdd').onclick=()=>{
   const n=$('cName').value.trim();
-  if(!n){ toast('Type a name'); return; }
+  if(!n){ toast(t('typeName')); return; }
   const it={n, c:$('cCat').value, u:$('cUnit').value, q:1,
     k:num($('cK').value), p:num($('cP').value), cb:num($('cC').value), ft:num($('cF').value)};
   if($('cSave').checked){
@@ -654,7 +788,7 @@ $('cAdd') && ($('cAdd').onclick=()=>{
   addItem(it);
   $('customBox').classList.remove('show');
   $('search').value=''; renderPool();
-  toast('✓ Added'+($('cSave').checked?' & saved':''));
+  toast($('cSave').checked?t('addedSaved'):t('added'));
 });
 
 // ---- Search ----
@@ -677,46 +811,48 @@ function renderThumbs(){
 }
 
 // ---- Add meal ----
-function itemLine(it){ return `${it.q} ${it.u} ${it.n}`; }
+function itemLine(it){ return `${it.q} ${it.u} ${it.n}`; }            // English — for export text/CSV
+function itemLineDisp(it){ return `${it.q} ${unitLabel(it.u)} ${iName(it)}`; } // localized — for display
 $('addBtn').onclick=()=>{
-  if(!state.items.length){ toast('Add at least one ingredient'); return; }
+  if(!state.items.length){ toast(t('needIng')); return; }
   let name=$('mealName').value.trim();
-  if(!name){ name=state.items.slice(0,2).map(i=>i.n).join(' + ') + (state.items.length>2?' …':''); }
+  if(!name){ name=state.items.slice(0,2).map(i=>iName(i)).join(' + ') + (state.items.length>2?' …':''); }
   const arr=loadDay();
   arr.push({ type:state.mealType, name,
-    items: state.items.map(i=>({n:i.n,q:i.q,u:i.u,k:i.k,p:i.p,cb:i.cb,ft:i.ft,g:i.g})),
+    items: state.items.map(i=>({n:i.n,he:i.he,q:i.q,u:i.u,k:i.k,p:i.p,cb:i.cb,ft:i.ft,g:i.g})),
     photoCount: state.photos.length, photoNames: state.photos.map(p=>p.name) });
   saveDay(arr);
   state.items=[]; state.photos=[]; $('mealName').value=''; $('search').value='';
   renderSelected(); renderThumbs(); renderPool(); renderDash(); renderEntries(); renderHistory();
-  toast('✓ Meal added');
+  toast(t('mealAdded'));
   window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
 };
 
-// ---- Day dashboard (totals vs goal) ----
+// ---- Day dashboard ----
 function renderDash(){
   const arr=loadDay(); const d=sumDay(arr); const g=goals();
   const box=$('dash');
   if(!arr.length){ box.innerHTML=''; return; }
-  const cell=(val,label,goalVal,over,isCap)=>{
+  const cell=(val,label,goalVal,isCap)=>{
     let sub='', bar='';
     if(goalVal!=null){
       const rem = goalVal - val;
       const pct = Math.min(100, val/goalVal*100);
       const isOver = isCap ? (val>goalVal) : (rem<0);
-      sub = `<div class="sub ${isOver?'over':'ok'}">${isCap?(isOver?'+'+r0(val-goalVal)+' over':r0(rem)+' left'):(rem>=0?r0(rem)+' left':'+'+r0(-rem)+' over')}</div>`;
+      const txt = isOver ? `+${r0(Math.abs(rem))} ${t('over')}` : `${r0(rem)} ${t('left')}`;
+      sub = `<div class="sub ${isOver?'over':'ok'}">${txt}</div>`;
       bar = `<div class="bar"><i class="${isOver?'over':''}" style="width:${pct}%"></i></div>`;
     }
     return `<div class="stat"><div class="v">${val}</div><div class="l">${label}</div>${sub}${bar}</div>`;
   };
   let html='<div class="totals">';
-  html+=cell(r0(d.k),'kcal', g?g.kcal:null, true, false);
-  html+=cell(r1(d.p),'protein', g?g.protein:null, false, false);
-  html+=cell(r1(d.cb),'carbs', g?g.carbCap:null, false, true);
-  html+=cell(r1(d.ft),'fat', g?g.fat:null, false, true);
+  html+=cell(r0(d.k),t('st_kcal'), g?g.kcal:null, false);
+  html+=cell(r1(d.p),t('st_protein'), g?g.protein:null, false);
+  html+=cell(r1(d.cb),t('st_carbs'), g?g.carbCap:null, true);
+  html+=cell(r1(d.ft),t('st_fat'), g?g.fat:null, true);
   html+='</div>';
-  if(!g) html+='<div class="nogoal">Set body stats above to see “remaining vs goal”.</div>';
-  if(d.unknown) html+='<div class="nogoal" style="color:#b07400">⚠︎ Some items have no macros yet — totals are low. Add their per-100 g values.</div>';
+  if(!g) html+=`<div class="nogoal">${t('setStats')}</div>`;
+  if(d.unknown) html+=`<div class="nogoal" style="color:#b07400">${t('unknownWarn')}</div>`;
   box.innerHTML=html;
 }
 
@@ -725,23 +861,23 @@ function renderEntries(){
   const arr=loadDay(); const c=$('entries');
   $('dayLabel').textContent=`· ${state.person}, ${fmtDate(state.date)}`;
   $('clearDayWrap').style.display=arr.length?'block':'none';
-  if(!arr.length){ c.innerHTML='<div class="empty">No meals logged yet for this day.</div>'; return; }
+  if(!arr.length){ c.innerHTML=`<div class="empty">${t('noMealsDay')}</div>`; return; }
   c.innerHTML='';
   arr.forEach((m,i)=>{
     const d=document.createElement('div'); d.className='entry';
-    const ing=(m.items||[]).map(it=>itemLine(it)).join('\n');
+    const ing=(m.items||[]).map(it=>itemLineDisp(it)).join('\n');
     const s=sumItems(m.items);
-    const pc=m.photoCount?`<div class="pc">📷 ${m.photoCount} label photo(s) to attach</div>`:'';
-    const mc=`<div class="mc">${r0(s.k)} kcal · ${r1(s.p)}g P · ${r1(s.cb)}g C · ${r1(s.ft)}g F${s.unknown?' ⚠︎':''}</div>`;
-    d.innerHTML=`<div class="body"><span class="tag">${m.type}</span>
+    const pc=m.photoCount?`<div class="pc">📷 ${m.photoCount} ${t('labelPhotos')}</div>`:'';
+    const mc=`<div class="mc">${fmtMacros(s)}${s.unknown?' ⚠︎':''}</div>`;
+    d.innerHTML=`<div class="body"><span class="tag">${esc(t('mt_'+m.type)||m.type)}</span>
       <div class="name">${esc(m.name)}</div>
       ${ing?`<div class="ing">${esc(ing)}</div>`:''}${mc}${pc}</div>
-      <button class="del" title="Remove">&times;</button>`;
+      <button class="del" title="x">&times;</button>`;
     d.querySelector('.del').onclick=()=>{ const a=loadDay(); a.splice(i,1); saveDay(a); renderDash(); renderEntries(); renderHistory(); };
     c.appendChild(d);
   });
 }
-$('clearDay').onclick=()=>{ if(confirm("Clear this day's logged meals?")){ saveDay([]); renderDash(); renderEntries(); renderHistory(); toast('Day cleared'); } };
+$('clearDay').onclick=()=>{ if(confirm(t('clearConfirm'))){ saveDay([]); renderDash(); renderEntries(); renderHistory(); toast(t('dayCleared')); } };
 
 // ---- History ----
 function personDates(person){
@@ -759,20 +895,20 @@ function personDates(person){
 }
 function renderHistory(){
   const list=$('histList'); const days=personDates(state.person);
-  if(!days.length){ list.innerHTML='<div class="empty">No history yet for '+esc(state.person)+'.</div>'; return; }
+  if(!days.length){ list.innerHTML=`<div class="empty">${t('noHistory')} ${esc(state.person)}.</div>`; return; }
   list.innerHTML='';
   days.forEach(day=>{
     const s=sumDay(day.arr); const g=goals();
     const row=document.createElement('div'); row.className='hist-row'+(day.iso===state.date?' cur':'');
     const goalTxt = g ? `/ ${g.kcal}` : '';
-    row.innerHTML=`<div class="hd">${fmtDate(day.iso)}<small>${day.arr.length} meal(s)</small></div>
-      <div class="hk">${r0(s.k)} ${goalTxt}<small>kcal · ${r1(s.p)}g P</small></div>`;
+    row.innerHTML=`<div class="hd">${fmtDate(day.iso)}<small>${day.arr.length} ${t('meals')}</small></div>
+      <div class="hk">${r0(s.k)} ${goalTxt}<small>${t('st_kcal')} · ${r1(s.p)} ${t('abP')}</small></div>`;
     row.onclick=()=>{ state.date=day.iso; $('date').value=day.iso; renderDash(); renderEntries(); renderHistory(); window.scrollTo({top:0,behavior:'smooth'}); };
     list.appendChild(row);
   });
 }
 
-// ---- CSV export ----
+// ---- CSV export (always English headers/names for the Excel pipeline) ----
 function csvCell(v){ v=(v==null?'':String(v)); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; }
 function buildCSV(persons){
   const head=['Person','Date','Meal Type','Meal Name','Ingredients','Calories','Protein(g)','Carbs(g)','Fat(g)'];
@@ -794,10 +930,10 @@ function downloadCSV(name, csv){
   const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),500);
 }
-$('expMine').onclick=()=>{ const csv=buildCSV([state.person]); if(csv.split('\r\n').length<2){toast('No history yet');return;} downloadCSV(`foodlog_${state.person}.csv`, csv); toast('✓ CSV downloaded'); };
-$('expAll').onclick=()=>{ downloadCSV('foodlog_all.csv', buildCSV(PEOPLE.map(p=>p.name))); toast('✓ CSV downloaded'); };
+$('expMine').onclick=()=>{ const csv=buildCSV([state.person]); if(csv.split('\r\n').length<2){toast(t('noHistShort'));return;} downloadCSV(`foodlog_${state.person}.csv`, csv); toast(t('csvDone')); };
+$('expAll').onclick=()=>{ downloadCSV('foodlog_all.csv', buildCSV(PEOPLE.map(p=>p.name))); toast(t('csvDone')); };
 
-// ---- Text output (Share/Copy) ----
+// ---- Text output (English — machine-readable bridge to the Excel) ----
 function buildText(){
   const arr=loadDay(); if(!arr.length) return null;
   const g=goals(); const d=sumDay(arr);
@@ -816,14 +952,14 @@ function buildText(){
   return out.trim();
 }
 $('copyBtn').onclick=async()=>{
-  const txt=buildText(); if(!txt){ toast('Nothing to copy yet'); return; }
-  try{ await navigator.clipboard.writeText(txt); toast('✓ Copied'); }
-  catch(e){ const ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); toast('✓ Copied'); }
+  const txt=buildText(); if(!txt){ toast(t('nothingCopy')); return; }
+  try{ await navigator.clipboard.writeText(txt); toast(t('copied')); }
+  catch(e){ const ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); toast(t('copied')); }
 };
 $('shareBtn').onclick=async()=>{
-  const txt=buildText(); if(!txt){ toast('Nothing to share yet'); return; }
+  const txt=buildText(); if(!txt){ toast(t('nothingShare')); return; }
   if(navigator.share){ try{ await navigator.share({title:'Food Log',text:txt}); }catch(e){} }
-  else{ try{ await navigator.clipboard.writeText(txt); toast('Copied (sharing not supported here)'); }catch(e){ toast('Copy not supported'); } }
+  else{ try{ await navigator.clipboard.writeText(txt); toast(t('shareUnsup')); }catch(e){ toast(t('shareUnsup')); } }
 };
 
 // ---- Goals form ----
@@ -843,16 +979,15 @@ function showGoalOut(){
   const g=computeGoals(readGoalsForm()); const out=$('goalOut');
   if(!g){ out.classList.remove('show'); return; }
   out.classList.add('show');
-  out.innerHTML=`🎯 ${g.kcal} kcal/day · ${g.protein}g protein${g.keto?` · carbs ≤${g.carbCap}g · fat ~${g.fat}g`:` · carbs ~${g.carbCap}g · fat ~${g.fat}g`}`;
+  const carbTxt = g.keto ? `${t('carbsLe')}${g.carbCap}g` : `${t('carbsApprox')}${g.carbCap}g`;
+  out.innerHTML=`🎯 ${g.kcal} ${t('perDay')} · ${g.protein}${t('gProtein')} · ${carbTxt} · ${t('fatApprox')}${g.fat}g`;
 }
 ['sWeight','sHeight','sAge','sGender','sAct','sDiet','sGoalType'].forEach(id=>{
   $(id).addEventListener('input', showGoalOut); $(id).addEventListener('change', showGoalOut);
 });
 $('saveGoals').onclick=()=>{
-  const s=readGoalsForm();
-  if($('sDiet').value==='Keto'){} // diet drives macros
-  saveStats(s); showGoalOut(); renderDash(); renderHistory();
-  toast('✓ Goals saved');
+  saveStats(readGoalsForm()); showGoalOut(); renderDash(); renderHistory();
+  toast(t('goalsSaved'));
 };
 
 // ---- collapsibles ----
@@ -866,11 +1001,29 @@ function collapse(headId, bodyId, startOpen){
 $('date').value=state.date;
 $('date').onchange=e=>{ state.date=e.target.value||todayISO(); renderDash(); renderEntries(); renderHistory(); };
 
+// ---- language ----
+function applyStatic(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent=t(el.getAttribute('data-i18n')); });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{ el.placeholder=t(el.getAttribute('data-i18n-ph')); });
+}
+function applyLang(){
+  document.documentElement.lang = LANG;
+  document.documentElement.dir = (LANG==='he') ? 'rtl' : 'ltr';
+  document.querySelectorAll('#langtog button').forEach(b=>b.classList.toggle('active', b.dataset.lang===LANG));
+  applyStatic();
+  renderMealTypes(); renderChips(); renderPool(); renderSelected();
+  renderDash(); renderEntries(); renderHistory(); showGoalOut();
+}
+document.querySelectorAll('#langtog button').forEach(b=>{
+  b.onclick=()=>{ LANG=b.dataset.lang; localStorage.setItem('fl_lang',LANG); applyLang(); };
+});
+
 // ---- init ----
 renderPeople(); renderKeto(); renderMealTypes(); renderChips(); renderPool();
 renderSelected(); loadGoalsForm(); renderDash(); renderEntries(); renderHistory();
-collapse('goalsHead','goalsBody', !loadStats()); // open if no stats yet
+collapse('goalsHead','goalsBody', !loadStats());
 collapse('histHead','histBody', false);
+applyLang();
 </script>
 </body>
 </html>
