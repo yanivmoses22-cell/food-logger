@@ -153,6 +153,10 @@
   .entry .pc{font-size:11px; color:var(--teal); font-weight:700; margin-top:3px;}
   .entry .mc{font-size:11.5px; color:var(--navy); font-weight:800; margin-top:4px;}
   .entry .del{background:none; border:none; color:var(--danger); font-size:22px; cursor:pointer; padding:0 2px; line-height:1; flex-shrink:0;}
+  .entry .ebtns{display:flex; flex-direction:column; gap:6px; flex-shrink:0;}
+  .entry .ebtn{background:none; border:none; cursor:pointer; line-height:1; padding:2px;}
+  .entry .ebtn.ed{color:var(--teal); font-size:18px;}
+  .entry .ebtn.rmv{color:var(--danger); font-size:22px;}
   .empty{text-align:center; color:var(--muted); font-size:13px; padding:18px 0;}
 
   /* calendar */
@@ -214,13 +218,17 @@
   #loader{position:fixed; inset:0; z-index:50; background:var(--bg); display:none; flex-direction:column;
     align-items:center; justify-content:center; gap:16px;}
   #loader.show{display:flex;}
-  #loader .px{animation:hop .5s steps(2,jump-none) infinite alternate;}
+  #loader .px{animation:bob .55s ease-in-out infinite alternate;}
   #loader .ltxt{font-family:"Courier New",monospace; font-weight:800; letter-spacing:4px; color:var(--navy); font-size:13px; text-transform:uppercase;}
   #loader .pbar{width:150px; height:14px; border:3px solid var(--navy); background:#fff; padding:2px;}
   #loader .pbar > i{display:block; height:100%; width:0; background:var(--teal);}
-  #loader.show .pbar > i{animation:fill 2.5s linear forwards;}
-  @keyframes hop{from{transform:translateY(0)} to{transform:translateY(-12px)}}
+  #loader.show .pbar > i{animation:fill 1.9s linear forwards;}
+  @keyframes bob{from{transform:translateY(0)} to{transform:translateY(-8px)}}
   @keyframes fill{from{width:0} to{width:100%}}
+  .px .tail{transform-box:fill-box; transform-origin:50% 100%;}
+  #loader .px .tail{animation:wag .5s ease-in-out infinite alternate;}
+  #streakPop .px .tail{animation:wag .3s ease-in-out infinite alternate;}
+  @keyframes wag{from{transform:rotate(-16deg)} to{transform:rotate(16deg)}}
 
   #streakPop{position:fixed; inset:0; z-index:60; background:rgba(15,25,40,.78); display:none;
     align-items:center; justify-content:center; padding:24px;}
@@ -489,25 +497,34 @@ const MENU = [
   {v:'settings', ic:'⚙️'},
 ];
 
-// pixel-art mascot (12x11 grid). w=hat g=body d=outline k=eyes m=mouth
-const MASCOT=[
-  "....wwww....",
-  "..wwwwwwww..",
-  "..wwwwwwww..",
-  "g..dggggd..g",
-  "g.dggggggd.g",
-  "..dgkggkgd..",
-  "..dggggggd..",
-  "..dgmmmmgd..",
-  "..dggggggd..",
-  "...dggggd...",
-  "...d....d...",
+// pixel-art orange cat (20x16). O/t=orange D/y=stripe K=outline P=pink E=eyes. t,y = tail group (wags)
+const CAT=[
+  "...KK.....KK........",
+  "..KPPK...KPPK.......",
+  "..KOOOOOOOOOOK......",
+  ".KOOOOOOOOOOOOK.....",
+  ".KOEEOOOOOOEEOK.....",
+  ".KOOOOOOOOOOOOK..tt.",
+  ".KOOOOOPPOOOOOK.tt..",
+  ".KOOOODOODOOOOK.tt..",
+  "..KOOOOOOOOOOK..tt..",
+  ".KOOODOOOODOOOK.ty..",
+  "KOOOOOOOOOOOOOOKtt..",
+  "KOOODOOOOOODOOOKty..",
+  "KOOOOOOOOOOOOOOKtt..",
+  "KOOODOOOOOODOOOKty..",
+  ".KOOOOOOOOOOOOK.tt..",
+  "..KKOOKKKKOOKK..tt..",
 ];
-const PAL={w:'#ffffff',g:'#46c46e',d:'#1e7e34',k:'#10241a',m:'#0e3a1f'};
-function pixSVG(map,pal,px){
-  const w=map[0].length,h=map.length; let r='';
-  for(let y=0;y<h;y++) for(let x=0;x<map[y].length;x++){ const c=map[y][x]; if(pal[c]) r+=`<rect x="${x}" y="${y}" width="1" height="1" fill="${pal[c]}"/>`; }
-  return `<svg class="px" width="${w*px}" height="${h*px}" viewBox="0 0 ${w} ${h}" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">${r}</svg>`;
+const PAL={O:'#f3992f',t:'#f3992f',D:'#dd7a2a',y:'#cf6f25',K:'#7a4a22',P:'#f4a9b0',E:'#3a2a18'};
+const TAIL={t:1,y:1};
+function pixSVG(map,pal,px,tailSet){
+  const w=map[0].length,h=map.length; let main='',tail='';
+  for(let y=0;y<h;y++) for(let x=0;x<map[y].length;x++){ const c=map[y][x]; if(!pal[c]) continue;
+    const r=`<rect x="${x}" y="${y}" width="1" height="1" fill="${pal[c]}"/>`;
+    if(tailSet&&tailSet[c]) tail+=r; else main+=r; }
+  const tg=tail?`<g class="tail">${tail}</g>`:'';
+  return `<svg class="px" width="${w*px}" height="${h*px}" viewBox="0 0 ${w} ${h}" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">${main}${tg}</svg>`;
 }
 
 const I18N = {
@@ -549,7 +566,7 @@ const I18N = {
     clearDay:"Clear this day's log", clearConfirm:"Clear this day's logged meals?", dayCleared:'Day cleared',
     tapDay:'Tap a day to view it. Green = under goal, red = over.',
     statsTitle:'Statistics', avg7:'7-day avg kcal', avg30:'30-day avg kcal', avgP7:'7-day avg protein',
-    onTarget:'Days under goal', streak:'Logging streak', last14:'Last 14 days (kcal)', daysU:'days',
+    onTarget:'Days under goal', streak:'Current streak', bestStreak:'Longest streak', last14:'Last 14 days (kcal)', daysU:'days',
     statsNoData:'Not enough data yet — log a few days of meals.',
     savedTitle:'Saved meals', noSaved:'No saved meals yet. Build one in Record, then tap “⭐ Save as meal”.',
     logIt:'Log it', delete:'Delete', savedDone:'✓ Saved as a meal', mealLoaded:'✓ Loaded — review & add', loggedToday:'✓ Logged to today',
@@ -606,7 +623,7 @@ const I18N = {
     clearDay:'מחיקת היומן של היום', clearConfirm:'למחוק את הארוחות שתועדו היום?', dayCleared:'היום נמחק',
     tapDay:'הקישו על יום לצפייה. ירוק = מתחת ליעד, אדום = מעבר.',
     statsTitle:'סטטיסטיקה', avg7:'ממוצע קלוריות 7 ימים', avg30:'ממוצע קלוריות 30 יום', avgP7:'ממוצע חלבון 7 ימים',
-    onTarget:'ימים מתחת ליעד', streak:'רצף תיעוד', last14:'14 הימים האחרונים (קלוריות)', daysU:'ימים',
+    onTarget:'ימים מתחת ליעד', streak:'רצף נוכחי', bestStreak:'הרצף הארוך ביותר', last14:'14 הימים האחרונים (קלוריות)', daysU:'ימים',
     statsNoData:'אין מספיק נתונים — תעדו כמה ימים.',
     savedTitle:'ארוחות שמורות', noSaved:'אין ארוחות שמורות. בנו אחת במסך התיעוד והקישו „⭐ שמירה כארוחה".',
     logIt:'תיעוד', delete:'מחיקה', savedDone:'✓ נשמר כארוחה', mealLoaded:'✓ נטען — בדקו והוסיפו', loggedToday:'✓ תועד להיום',
@@ -837,12 +854,19 @@ function nav(view, cb){
   navving=true; const ld=$('loader');
   ld.classList.remove('show'); void ld.offsetWidth; ld.classList.add('show'); // restart bar animation
   clearTimeout(navTimer);
-  navTimer=setTimeout(()=>{ ld.classList.remove('show'); navving=false; go(view); if(cb) cb(); }, 2500);
+  navTimer=setTimeout(()=>{ ld.classList.remove('show'); navving=false; go(view); if(cb) cb(); }, 1900);
 }
 $('backBtn').onclick=()=>go('menu');
 
 // ---------- streak ----------
 function computeStreak(){ let s=0; for(let i=0;;i++){ const iso=addDays(todayISO(),-i); if(loadDay(iso).length) s++; else break; } return s; }
+function longestStreak(){
+  const pre='fl_log_'+state.person+'_'; const set=new Set();
+  for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&k.indexOf(pre)===0){
+    let a=[]; try{a=JSON.parse(localStorage.getItem(k))||[];}catch(e){} if(a.length) set.add(k.slice(pre.length)); } }
+  let best=0; set.forEach(iso=>{ if(!set.has(addDays(iso,-1))){ let len=0,cur=iso; while(set.has(cur)){ len++; cur=addDays(cur,1); } if(len>best) best=len; } });
+  return best;
+}
 function showStreak(){ $('streakNum').textContent=computeStreak(); $('streakPop').classList.add('show'); }
 $('streakClose').onclick=()=>$('streakPop').classList.remove('show');
 $('streakPop').onclick=e=>{ if(e.target.id==='streakPop') $('streakPop').classList.remove('show'); };
@@ -1017,17 +1041,19 @@ function dashHTML(arr){
   if(d.unknown) h+=`<div class="nogoal" style="color:#b07400">${t('unknownWarn')}</div>`;
   return h;
 }
-function entriesHTML(arr, onDel){
+function entriesHTML(arr, onDel, onEdit){
   const c=document.createElement('div');
   if(!arr.length){ c.innerHTML=`<div class="empty">${t('noMealsDay')}</div>`; return c; }
   arr.forEach((m,i)=>{ const d=document.createElement('div'); d.className='entry';
     const ing=(m.items||[]).map(it=>itemLineDisp(it)).join('\n'); const s=sumItems(m.items);
     const pc=m.photoCount?`<div class="pc">📷 ${m.photoCount} ${t('labelPhotos')}</div>`:'';
+    const btns=`<div class="ebtns">${onEdit?'<button class="ebtn ed" title="edit">✎</button>':''}<button class="ebtn rmv" title="remove">&times;</button></div>`;
     d.innerHTML=`<div class="body"><span class="tag">${esc(t('mt_'+m.type)||m.type)}</span>
       <div class="name">${esc(m.name)}</div>${ing?`<div class="ing">${esc(ing)}</div>`:''}
-      <div class="mc">${fmtMacros(s)}${s.unknown?' ⚠︎':''}</div>${pc}</div>
-      <button class="del">&times;</button>`;
-    d.querySelector('.del').onclick=()=>onDel(i); c.appendChild(d); });
+      <div class="mc">${fmtMacros(s)}${s.unknown?' ⚠︎':''}</div>${pc}</div>${btns}`;
+    d.querySelector('.rmv').onclick=()=>onDel(i);
+    if(onEdit) d.querySelector('.ed').onclick=()=>onEdit(i);
+    c.appendChild(d); });
   return c;
 }
 function renderHome(){
@@ -1035,8 +1061,16 @@ function renderHome(){
   const arr=loadDay();
   $('homeDayLabel').textContent=`· ${fmtDate(state.date)}`;
   $('homeDash').innerHTML=dashHTML(arr);
-  const e=$('homeEntries'); e.innerHTML=''; e.appendChild(entriesHTML(arr,i=>{ const a=loadDay(); a.splice(i,1); saveDay(a); renderHome(); }));
+  const e=$('homeEntries'); e.innerHTML='';
+  e.appendChild(entriesHTML(arr, i=>{ const a=loadDay(); a.splice(i,1); saveDay(a); renderHome(); }, editEntry));
   $('homeClearWrap').style.display=arr.length?'block':'none';
+}
+function editEntry(i){
+  const arr=loadDay(); const m=arr[i]; if(!m) return;
+  state.items=(m.items||[]).map(x=>Object.assign({},x));
+  state.mealType=m.type||'Breakfast';
+  arr.splice(i,1); saveDay(arr); // pull it out; re-adding via "Add to log" saves the edited version
+  nav('record', ()=>{ $('mealName').value=m.name||''; renderMealTypes(); renderSelected(); });
 }
 $('dateHome').onchange=e=>{ state.date=e.target.value||todayISO(); renderHome(); };
 $('goRecord').onclick=()=>nav('record');
@@ -1097,6 +1131,7 @@ function renderStats(){
   h+=`<div class="stat"><div class="v">${r0(p7)}g</div><div class="l">${t('avgP7')}</div></div>`;
   if(onTarget!=null) h+=`<div class="stat"><div class="v">${onTarget}/${win30.length}</div><div class="l">${t('onTarget')}</div></div>`;
   h+=`<div class="stat"><div class="v">${streak}</div><div class="l">${t('streak')} (${t('daysU')})</div></div>`;
+  h+=`<div class="stat"><div class="v">🔥 ${longestStreak()}</div><div class="l">${t('bestStreak')} (${t('daysU')})</div></div>`;
   h+=`</div></div>`;
   h+=`<div class="card"><div class="section-title">${t('last14')}</div><div class="chart">${goalLine}${bars}</div></div>`;
   body.innerHTML=h;
@@ -1181,8 +1216,8 @@ function applyLang(){
 document.querySelectorAll('#langtog button').forEach(b=>{ b.onclick=()=>{ LANG=b.dataset.lang; localStorage.setItem('fl_lang',LANG); applyLang(); }; });
 
 // ---------- init ----------
-$('loaderArt').innerHTML=pixSVG(MASCOT,PAL,5);
-$('streakArt').innerHTML=pixSVG(MASCOT,PAL,9);
+$('loaderArt').innerHTML=pixSVG(CAT,PAL,4,TAIL);
+$('streakArt').innerHTML=pixSVG(CAT,PAL,7,TAIL);
 renderPeople(); applyLang(); go('menu');
 </script>
 </body>
