@@ -218,31 +218,29 @@
   #loader{position:fixed; inset:0; z-index:50; background:var(--bg); display:none; flex-direction:column;
     align-items:center; justify-content:center; gap:16px;}
   #loader.show{display:flex;}
-  #loader .px{animation:bob .55s ease-in-out infinite alternate;}
   #loader .ltxt{font-family:"Courier New",monospace; font-weight:800; letter-spacing:4px; color:var(--navy); font-size:13px; text-transform:uppercase;}
   #loader .pbar{width:150px; height:14px; border:3px solid var(--navy); background:#fff; padding:2px;}
   #loader .pbar > i{display:block; height:100%; width:0; background:var(--teal);}
   #loader.show .pbar > i{animation:fill 1.9s linear forwards;}
-  @keyframes bob{from{transform:translateY(0)} to{transform:translateY(-8px)}}
   @keyframes fill{from{width:0} to{width:100%}}
-  .px .tail{transform-box:fill-box; transform-origin:50% 100%;}
-  #loader .px .tail{animation:wag .5s ease-in-out infinite alternate;}
-  #streakPop .px .tail{animation:wag .3s ease-in-out infinite alternate;}
-  @keyframes wag{from{transform:rotate(-16deg)} to{transform:rotate(16deg)}}
+  .px .cat{transform-box:fill-box; transform-origin:50% 100%; animation:cathop .8s ease-in-out infinite;}
+  .px .seg{transform-box:fill-box; transform-origin:50% 100%; animation:catsway .8s ease-in-out infinite alternate;}
+  .px .s1{animation-delay:.05s} .px .s2{animation-delay:.16s} .px .s3{animation-delay:.27s} .px .s4{animation-delay:.38s} .px .s5{animation-delay:.49s}
+  @keyframes catsway{0%{transform:rotate(-13deg)} 100%{transform:rotate(13deg)}}
+  @keyframes cathop{0%,100%{transform:translateY(0) scaleY(1)} 20%{transform:translateY(0) scaleY(.92)} 50%{transform:translateY(-11px) scaleY(1.04)} 80%{transform:translateY(0) scaleY(.96)}}
 
   #streakPop{position:fixed; inset:0; z-index:60; background:rgba(15,25,40,.78); display:none;
     align-items:center; justify-content:center; padding:24px;}
   #streakPop.show{display:flex;}
   #streakPop .pop{background:var(--card); border-radius:18px; padding:26px 22px; text-align:center;
     max-width:320px; width:100%; box-shadow:0 12px 40px rgba(0,0,0,.45); animation:popin .35s ease;}
-  #streakPop .px{margin:0 auto; animation:cheer .5s ease-in-out infinite alternate;}
+  #streakPop .px{margin:0 auto;}
   #streakPop .num{font-family:"Courier New",monospace; font-size:56px; font-weight:800; color:#f0a500;
     line-height:1; margin:10px 0 2px; text-shadow:3px 3px 0 #c47e00;}
   #streakPop .unit{font-family:"Courier New",monospace; font-weight:800; letter-spacing:2px; color:var(--navy); text-transform:uppercase; font-size:14px;}
   #streakPop .msg{color:var(--muted); font-size:13px; margin:10px 14px 18px;}
   #streakPop .btn{background:var(--teal); color:#fff;}
   @keyframes popin{from{transform:scale(.7); opacity:0} to{transform:scale(1); opacity:1}}
-  @keyframes cheer{from{transform:translateY(0) rotate(-3deg)} to{transform:translateY(-10px) rotate(3deg)}}
 
   /* RTL */
   [dir=rtl] .search-wrap input{padding-left:12px; padding-right:38px;}
@@ -497,34 +495,34 @@ const MENU = [
   {v:'settings', ic:'⚙️'},
 ];
 
-// pixel-art orange cat (20x16). O/t=orange D/y=stripe K=outline P=pink E=eyes. t,y = tail group (wags)
+// pixel-art orange-and-white cat ("classic bib") + loose 5-segment tail. O=orange D=stripe K=outline P=pink E=eye W=white patch
 const CAT=[
-  "...KK.....KK........",
-  "..KPPK...KPPK.......",
-  "..KOOOOOOOOOOK......",
-  ".KOOOOOOOOOOOOK.....",
-  ".KOEEOOOOOOEEOK.....",
-  ".KOOOOOOOOOOOOK..tt.",
-  ".KOOOOOPPOOOOOK.tt..",
-  ".KOOOODOODOOOOK.tt..",
-  "..KOOOOOOOOOOK..tt..",
-  ".KOOODOOOODOOOK.ty..",
-  "KOOOOOOOOOOOOOOKtt..",
-  "KOOODOOOOOODOOOKty..",
-  "KOOOOOOOOOOOOOOKtt..",
-  "KOOODOOOOOODOOOKty..",
-  ".KOOOOOOOOOOOOK.tt..",
-  "..KKOOKKKKOOKK..tt..",
+  "...KK.....KK....",
+  "..KPPK...KPPK...",
+  "..KOOOOOOOOOOK..",
+  ".KOOOOOOOOOOOOK.",
+  ".KOEEOOOOOOEEOK.",
+  ".KOOOOOOOOOOOOK.",
+  ".KOOOWWPPWWOOOK.",
+  ".KOOOWWWWWWOOOK.",
+  "..KOOWWWWWWOOK..",
+  ".KOOOWWWWWWOOOK.",
+  "KOOODWWWWWWDOOOK",
+  "KOOOOWWWWWWOOOOK",
+  "KOOODWWWWWWDOOOK",
+  "KOOOOWWWWWWOOOOK",
+  ".KOOOWWWWWWOOOK.",
+  ".KOOOOOOOOOOOOK.",
+  "..KKWWKKKKWWKK..",
 ];
-const PAL={O:'#f3992f',t:'#f3992f',D:'#dd7a2a',y:'#cf6f25',K:'#7a4a22',P:'#f4a9b0',E:'#3a2a18'};
-const TAIL={t:1,y:1};
-function pixSVG(map,pal,px,tailSet){
-  const w=map[0].length,h=map.length; let main='',tail='';
-  for(let y=0;y<h;y++) for(let x=0;x<map[y].length;x++){ const c=map[y][x]; if(!pal[c]) continue;
-    const r=`<rect x="${x}" y="${y}" width="1" height="1" fill="${pal[c]}"/>`;
-    if(tailSet&&tailSet[c]) tail+=r; else main+=r; }
-  const tg=tail?`<g class="tail">${tail}</g>`:'';
-  return `<svg class="px" width="${w*px}" height="${h*px}" viewBox="0 0 ${w} ${h}" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">${main}${tg}</svg>`;
+const PAL={O:'#f3992f',D:'#d9722a',K:'#7a4a22',P:'#f4a9b0',E:'#2e2118',W:'#f7f6ef'};
+function bodyRects(map){ let r=''; map.forEach((row,y)=>{ for(let x=0;x<row.length;x++){ const c=row[x]; if(PAL[c]) r+=`<rect x="${x}" y="${y}" width="1" height="1" fill="${PAL[c]}"/>`; } }); return r; }
+function tailSeg(d,n){ let r=''; for(let yy=-3;yy<=-1;yy++) for(let xx=0;xx<=1;xx++){ const stripe=(yy===-2&&d%2===0); r+=`<rect x="${xx}" y="${yy}" width="1" height="1" fill="${stripe?PAL.D:PAL.O}"/>`; }
+  return `<g class="seg s${d}">${r}<g transform="translate(0,-3)">${d<n?tailSeg(d+1,n):''}</g></g>`; }
+function catSVG(w){
+  return `<svg class="px" viewBox="0 0 48 44" width="${w}" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">`+
+    `<g class="cat" transform="translate(9,17)"><g class="tail" transform="translate(14,13) rotate(20)">${tailSeg(1,5)}</g>`+
+    `<g class="body">${bodyRects(CAT)}</g></g></svg>`;
 }
 
 const I18N = {
@@ -1216,8 +1214,8 @@ function applyLang(){
 document.querySelectorAll('#langtog button').forEach(b=>{ b.onclick=()=>{ LANG=b.dataset.lang; localStorage.setItem('fl_lang',LANG); applyLang(); }; });
 
 // ---------- init ----------
-$('loaderArt').innerHTML=pixSVG(CAT,PAL,4,TAIL);
-$('streakArt').innerHTML=pixSVG(CAT,PAL,7,TAIL);
+$('loaderArt').innerHTML=catSVG(135);
+$('streakArt').innerHTML=catSVG(170);
 renderPeople(); applyLang(); go('menu');
 </script>
 </body>
